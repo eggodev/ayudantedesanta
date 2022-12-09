@@ -4,7 +4,7 @@ const SuscriptionBanner = () => (
   <div className="subscribe">
     <h2 className="subscribe__title">Suscribite a nuestro boletín</h2>
     <p className="subscribe__copy">
-      Te gustaría conocer nuestras promociones y novedades navideñas?.
+      Te gustaría conocer nuestras promociones y novedades navideñas?
     </p>
     <div className="form">
       <input
