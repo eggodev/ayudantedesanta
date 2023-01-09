@@ -1,11 +1,11 @@
 {
   "root": true,
-  "project": {
-    "name": "ayudantedesanta"
-  },
   "api": {
     "projectId": "ylod4odd",
     "dataset": "production"
+  },
+  "project": {
+    "name": "ayudantedesanta"
   },
   "plugins": [
     "@sanity/base",
