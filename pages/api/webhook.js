@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   const digest = md5("adams" + body + process.env.ADAMSPAY_API_SECRET);
   if (digest === hmacHeader) {
     const json = JSON.parse(body.toString("utf-8"));
-    console.log("modicado exitosamente...");
+    console.log(json);
 
     if (json.notify.type === "debtStatus") {
       let message = "prueba";
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
         html: `<div>${message}</div><div style="color:red;">Esta transacción no es real, sólo corresponde a una demostración.</div>`,
       };
 
-      sendgrid
+      await sendgrid
         .send(msg)
         .then((response) => {
           console.log(response[0].statusCode);
