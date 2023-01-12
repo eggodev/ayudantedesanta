@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   const digest = md5("adams" + body + process.env.ADAMSPAY_API_SECRET);
   if (digest === hmacHeader) {
     const json = JSON.parse(body.toString("utf-8"));
-    console.log(json);
+    console.log("modicado exitosamente...");
 
     if (json.notify.type === "debtStatus") {
       let message = "prueba";
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
           console.log(response[0].headers);
         })
         .catch((error) => {
-          console.error(error);
+          console.log(error);
         });
     }
 
