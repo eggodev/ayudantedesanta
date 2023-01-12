@@ -1,6 +1,7 @@
-import crypto from "crypto";
 import getRawBody from "raw-body";
 import md5 from "md5";
+import sendgrid from "@sendgrid/mail";
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 export default async function handler(req, res) {
   const body = await getRawBody(req);
@@ -10,8 +11,8 @@ export default async function handler(req, res) {
     const json = JSON.parse(body.toString("utf-8"));
     console.log(json);
 
-    if (json.notify.type === "debtStatus") {      
-      let message = "";
+    if (json.notify.type === "debtStatus") {
+      let message = "prueba";
       switch (json.debt.payStatus.status) {
         case "pending":
           message = `Su pedido aun esta pendiente de pago, ingrese al siguiente enlace para finalizar su compra!: ${json.debt.payUrl}`;
@@ -19,28 +20,29 @@ export default async function handler(req, res) {
         case "paid":
           message = `Muchas gracias por su compra!. Ya nos disponemos a realizar el envío! Feliz Navidad! :)`;
           //update debt in sanity
-          break;        
+          break;
         default:
           message = `La compra no fue procesada, por favor contacte con nuestro soporte: El estado de la deuda cambió a: ${json.debt.objStatus.status}`;
       }
-      const email = json.debt.target.label;      
-      const nodemailer = require('nodemailer');
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
-        port: 587,
-        auth: {
-            user: process.env.USERMAIL,
-            pass: process.env.PASSMAIL,
-        }
-      });
-      let info = await transporter.sendMail({
-        from: 'info@ayudantedesanta.com',
-        to: email,
-        subject: "Compra realizada en ayudantedesanta.com",
-        text:message
-      })
-      .then((response)=>{console.log(response)})
-      .catch((error)=>{console.log(error)});
+      const email = json.debt.target.label;
+
+      const msg = {
+        to: email, // Change to your recipient
+        from: "eggodev@gmail.com", // Change to your verified sender
+        subject: "Compra realizada en ayudantedesanta.vercel.app",
+        text: message,
+        html: `<div>${message}</div><div style="color:red;">Esta transacción no es real, sólo corresponde a una demostración.</div>`,
+      };
+
+      sendgrid
+        .send(msg)
+        .then((response) => {
+          console.log(response[0].statusCode);
+          console.log(response[0].headers);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
 
     res.status(200).end("OK");
